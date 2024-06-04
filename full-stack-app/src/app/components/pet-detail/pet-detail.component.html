@@ -1,1 +1,8 @@
-<p>pet-detail works!</p>
+<div *ngIf="pet">
+    <h2>{{ pet?.name }}</h2>
+    <p><strong>Type:</strong> {{ pet?.type }}</p>
+    <p><strong>Breed:</strong> {{ pet?.breed }}</p>
+    <p><strong>Age:</strong> {{ pet?.age }}</p>
+    <p><strong>Description:</strong> {{ pet?.description }}</p>
+    <button (click)="addToFavorites(pet?.petId)">Add to Favorites</button>
+  </div>

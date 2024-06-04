@@ -1,36 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Pet } from '../models/pet.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Favorite } from '../models/favorite.model';
-import { PetService } from './pet.service';
+import { Pet } from '../models/pet.model';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class FavoriteService {
-  private favorites: Favorite[] = [];
-  private favoritePets: Pet[] = [];
+  private apiUrl = 'https://localhost:7113/api/favorites';
 
 
-  constructor(private petService: PetService) { }
+  constructor(private http: HttpClient) { }
 
 
-  getFavorites(userId: string): Pet[] {
-    return this.favoritePets.filter(pet => this.favorites.some(fav => fav.userId === userId && fav.petId === pet.petId));
+  getFavorites(userId: string): Observable<Favorite[]> {
+    return this.http.get<Favorite[]>(`${this.apiUrl}/${userId}`);
   }
 
 
-  addFavorite(userId: string, petId: number): void {
-    const pet = this.petService.getPet(petId);
-    if (pet) {
-      this.favorites.push({ userId, petId });
-      this.favoritePets.push(pet);
-    }
+  addFavorite(userId: string, petId: number): Observable<Favorite> {
+    const favorite: Favorite = { userId, petId };
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post<Favorite>(this.apiUrl, favorite, httpOptions);
   }
 
 
-  removeFavorite(userId: string, petId: number): void {
-    this.favorites = this.favorites.filter(f => f.userId !== userId || f.petId !== petId);
-    this.favoritePets = this.favoritePets.filter(p => p.petId !== petId);
+  removeFavorite(userId: string, petId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${userId}/${petId}`);
   }
 }
+
+
+
