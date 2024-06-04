@@ -26,7 +26,7 @@ export class PetListComponent implements OnInit {
   };
 
 
-  constructor(private petService: PetService) { }
+  constructor(private petService: PetService, private router: Router) { }
 
 
   ngOnInit(): void {
@@ -50,3 +50,4 @@ export class PetListComponent implements OnInit {
     }
   }
 }
+
