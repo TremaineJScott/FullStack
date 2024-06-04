@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { PetService } from '../../services/pet.service';
 import { FavoriteService } from '../../services/favorite.service';
 import { Pet } from '../../models/pet.model';
-import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-pet-detail',
-  templateUrl: './pet-detail.component.html',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule,HttpClientModule],
+  templateUrl: './pet-detail.component.html',
   styleUrls: ['./pet-detail.component.css']
 })
 export class PetDetailComponent implements OnInit {
@@ -27,7 +29,7 @@ export class PetDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
-    this.pet = this.petService.getPet(id);
+    this.petService.getPet(id).subscribe(pet => this.pet = pet);
   }
 
 
@@ -37,4 +39,3 @@ export class PetDetailComponent implements OnInit {
     }
   }
 }
-

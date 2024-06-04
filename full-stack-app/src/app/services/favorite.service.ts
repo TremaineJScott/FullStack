@@ -22,10 +22,10 @@ export class FavoriteService {
 
   addFavorite(userId: string, petId: number): void {
     const pet = this.petService.getPet(petId);
-    if (pet) {
+    /* if (pet) {
       this.favorites.push({ userId, petId });
       this.favoritePets.push(pet);
-    }
+    } */
   }
 
 

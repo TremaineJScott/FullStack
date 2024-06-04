@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLinkActive, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { PetService } from '../../services/pet.service';
 import { Pet } from '../../models/pet.model';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-pet-list',
-  templateUrl: './pet-list.component.html',
-  styleUrls: ['./pet-list.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterLinkActive, RouterModule]
+  imports: [CommonModule, FormsModule, RouterModule, HttpClientModule],
+  templateUrl: './pet-list.component.html',
+  styleUrls: ['./pet-list.component.css']
 })
 export class PetListComponent implements OnInit {
   pets: Pet[] = [];
@@ -23,24 +25,28 @@ export class PetListComponent implements OnInit {
     description: ''
   };
 
-  constructor(private petService: PetService, private router: Router) { }
+
+  constructor(private petService: PetService) { }
+
 
   ngOnInit(): void {
-    this.pets = this.petService.getPets();
+    this.petService.getPets().subscribe(pets => this.pets = pets);
   }
+
 
   addPet(): void {
     if (this.newPet.name && this.newPet.type && this.newPet.breed && this.newPet.age > 0 && this.newPet.description) {
-      this.petService.addPet(this.newPet);
-      this.newPet = {
-        petId: 0,
-        name: '',
-        type: '',
-        breed: '',
-        age: 0,
-        description: ''
-      };
+      this.petService.addPet(this.newPet).subscribe(pet => {
+        this.pets.push(pet);
+        this.newPet = {
+          petId: 0,
+          name: '',
+          type: '',
+          breed: '',
+          age: 0,
+          description: ''
+        };
+      });
     }
   }
 }
-

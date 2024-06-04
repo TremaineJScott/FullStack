@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Pet } from '../models/pet.model';
 
 
@@ -6,70 +9,43 @@ import { Pet } from '../models/pet.model';
   providedIn: 'root'
 })
 export class PetService {
-  private pets: Pet[] = [
-    {
-      petId: 1,
-      name: 'Buddy',
-      type: 'Dog',
-      breed: 'Golden Retriever',
-      age: 3,
-      description: 'Friendly and energetic'
-    },
-    {
-      petId: 2,
-      name: 'Mittens',
-      type: 'Cat',
-      breed: 'Siamese',
-      age: 2,
-      description: 'Playful and affectionate'
-    },
-    {
-      petId: 3,
-      name: 'Charlie',
-      type: 'Dog',
-      breed: 'Beagle',
-      age: 4,
-      description: 'Loyal and curious'
-    }
-  ];
+  private apiUrl = 'https://localhost:7113/api/pets';
 
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
 
-  getPets(): Pet[] {
-    return this.pets;
+  getPets(): Observable<Pet[]> {
+    return this.http.get<Pet[]>(this.apiUrl);
   }
 
 
-  getPet(id: number): Pet | undefined {
-    return this.pets.find(p => p.petId === id);
+  getPet(id: number): Observable<Pet> {
+    return this.http.get<Pet>(`${this.apiUrl}/${id}`);
   }
 
 
-  addPet(pet: Pet): Pet {
-    pet.petId = this.pets.length + 1;
-    this.pets.push(pet);
-    return pet;
+  addPet(pet: Pet): Observable<Pet> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post<Pet>(this.apiUrl, pet, httpOptions);
   }
 
 
-  updatePet(updatedPet: Pet): boolean {
-    const index = this.pets.findIndex(p => p.petId === updatedPet.petId);
-    if (index !== -1) {
-      this.pets[index] = updatedPet;
-      return true;
-    }
-    return false;
+  updatePet(updatedPet: Pet): Observable<Pet> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.put<Pet>(`${this.apiUrl}/${updatedPet.petId}`, updatedPet, httpOptions);
   }
 
 
-  deletePet(id: number): boolean {
-    const index = this.pets.findIndex(p => p.petId === id);
-    if (index !== -1) {
-      this.pets.splice(index, 1);
-      return true;
-    }
-    return false;
+  deletePet(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
