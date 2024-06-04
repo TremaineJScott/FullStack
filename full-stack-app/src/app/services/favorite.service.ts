@@ -20,15 +20,14 @@ export class FavoriteService {
   }
 
 
-
   addFavorite(userId: string, petId: number): Observable<Favorite> {
     const favorite: Favorite = { userId, petId };
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
-    };    return this.http.post<Favorite>(this.apiUrl, favorite, httpOptions);
-
+    };
+    return this.http.post<Favorite>(this.apiUrl, favorite, httpOptions);
   }
 
 
@@ -36,7 +35,6 @@ export class FavoriteService {
     return this.http.delete<void>(`${this.apiUrl}/${userId}/${petId}`);
   }
 }
-
 
 
 

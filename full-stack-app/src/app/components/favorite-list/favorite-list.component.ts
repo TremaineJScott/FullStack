@@ -49,3 +49,4 @@ export class FavoriteListComponent implements OnInit {
     });
   }
 }
+

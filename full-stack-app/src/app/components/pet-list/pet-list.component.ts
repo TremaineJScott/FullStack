@@ -26,7 +26,7 @@ export class PetListComponent implements OnInit {
   };
 
 
-  constructor(private petService: PetService, private router: Router) { }
+  constructor(private petService: PetService) { }
 
 
   ngOnInit(): void {

@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-pet-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule,HttpClientModule],
+  imports: [CommonModule, RouterModule, HttpClientModule],
   templateUrl: './pet-detail.component.html',
   styleUrls: ['./pet-detail.component.css']
 })
@@ -35,8 +35,7 @@ export class PetDetailComponent implements OnInit {
 
   addToFavorites(petId: number | undefined): void {
     if (petId !== undefined) {
-      this.favoriteService.addFavorite(this.userId, petId);
+      this.favoriteService.addFavorite(this.userId, petId).subscribe();
     }
   }
 }
-
